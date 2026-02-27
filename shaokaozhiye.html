@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>跳舞的线饭制《烧烤之夜》 下载</title>
+    <style>
+        /* 全局重置 白色简约基调 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;  
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 1.5rem 1rem;
+        }
+
+        .page-wrapper {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        /* 主标题 */
+        .hero-title {
+            font-size: 2rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            color: #1e1e1e;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .hero-sub {
+            text-align: center;
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px dashed #ddd;
+            padding-bottom: 0.75rem;
+        }
+
+        /* 卡片通用设计：纯白背景，柔和阴影，极小圆角 */
+        .card {
+            background-color: #ffffff;
+            border-radius: 10px;           /* 小小小圆角 */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02);
+            padding: 1.5rem 1.5rem;
+            margin-bottom: 1.8rem;
+            border: 1px solid rgba(0,0,0,0.02);
+            /* 进场动画初始状态：透明并轻微下移 */
+            opacity: 0;
+            transform: translateY(20px);
+            /* 过渡：透明度、移动缓慢变化，阴影保持0.2s（原有交互） */
+            transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.2s;
+        }
+        .card:hover {
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+        }
+        /* 卡片可见状态（由js触发） */
+        .card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 卡片标题 */
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 450;
+            color: #222;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 2px solid #f0f0f0;
+            letter-spacing: -0.2px;
+        }
+
+        /* 简介文字 */
+        .intro-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 1.2rem;
+        }
+        .author-info {
+            background-color: #f8f8fa;
+            padding: 1rem 1.2rem;
+            border-radius: 8px;        /* 内部小圆角 */
+            color: #2c3e50;
+            font-size: 1.05rem;
+            border-left: 4px solid #ffaaa5; /* 淡暖色点缀 */
+        }
+        .author-info span {
+            font-weight: 500;
+            color: #111;
+        }
+
+        /* 按钮组布局: flex 网格 */
+        .button-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 0.5rem;
+        }
+        .button-grid.half {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .button-grid.half .btn {
+            flex: 1 1 calc(50% - 12px);  /* 两列 */
+            min-width: 140px;
+        }
+        .button-grid.three {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .button-grid.three .btn {
+            flex: 1 1 calc(33.333% - 10px);
+            min-width: 110px;
+        }
+        .button-grid.full .btn {
+            flex: 1 1 100%;
+        }
+
+        /* 按钮基础样式 — 纯白微质感，极小圆角 */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 1rem;
+            background-color: #f8f9fc;
+            border: 1px solid #eaeef2;
+            border-radius: 6px;          /* 弧度小小小 */
+            font-size: 1rem;
+            font-weight: 450;
+            color: #1e2b3c;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s, box-shadow 0.1s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            line-height: 1.2;
+            text-align: center;
+            white-space: nowrap;
+            word-break: keep-all;
+        }
+        .btn:hover {
+            background-color: #ffffff;
+            border-color: #cdd9e6;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
+        }
+        .btn:active {
+            background-color: #e9ecf0;
+            transform: scale(0.98);
+        }
+        /* 安卓按钮特殊色（暂不可用） */
+        .btn.android {
+            background-color: #f2f2f2;
+            color: #8a8f99;
+            border-color: #dadfe6;
+            cursor: pointer;
+        }
+        .btn.android:hover {
+            background-color: #f0f0f0;
+            border-color: #c0c8d2;
+        }
+
+        /* 提示小字 */
+        .hint-text {
+            font-size: 0.85rem;
+            color: #8e9aab;
+            margin-top: 0.8rem;
+            padding-left: 0.2rem;
+            letter-spacing: 0.2px;
+        }
+        .hint-text i {
+            font-style: normal;
+            background-color: #f1f3f5;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            margin-right: 4px;
+        }
+
+        /* 分隔各个板块的视觉距离 */
+        .spacer {
+            height: 0.5rem;
+        }
+
+        /* 移动端微调 */
+        @media (max-width: 500px) {
+            .card {
+                padding: 1.2rem 1.2rem;
+            }
+            .button-grid.three .btn {
+                flex: 1 1 calc(50% - 10px);
+            }
+            .button-grid.half .btn {
+                flex: 1 1 100%;
+            }
+            .btn {
+                white-space: normal;
+                padding: 0.7rem 0.5rem;
+                font-size: 0.95rem;
+            }
+            .hero-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .button-grid.three .btn {
+                flex: 1 1 100%;
+            }
+        }
+
+        /* 装饰性角标 */
+        .badge {
+            background: #f0f3f7;
+            border-radius: 4px;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.75rem;
+            color: #4a5b6f;
+            margin-left: 0.3rem;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* 脚注 */
+        .footer-note {
+            text-align: center;
+            color: #9aa9b9;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            padding: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+<div class="page-wrapper">
+
+    <!-- 主标题 -->
+    <h1 class="hero-title">跳舞的线饭制<br>《烧烤之夜》<br></h1>
+    <div class="hero-sub">Dancing Line Fanmade — 驍烤之燁Barbecue Night</div>
+
+    <!-- 卡片1：简介 (150字左右) -->
+    <div class="card">
+        <h2 class="card-title">合集简介</h2>
+        <div class="intro-text">
+            《驍烤之燁》（Barbecue Night）（另名《烧烤之夜》）是跳舞的线社区玩家“驍燁”自制饭制合集，2026年2月份，v.1.0.0版本已上线，但目前仅完成Windows原型版本。且由于作者时间管理和部分原因，此合集将进入停更阶段，感谢玩家们的支持。
+        </div>
+        <!-- 作者信息 -->
+        <div class="author-info">
+            <span>作者：驍燁 （总设计）       </span>
+        </div>
+    </div>
+
+    <!-- 卡片2：社交媒体 + DLRS同人网 三件套 -->
+    <div class="card">
+        <h2 class="card-title">关注作者</h2>
+        <div class="button-grid three">
+            <!-- 哔哩哔哩 -->
+            <a href="https://space.bilibili.com/3546763094919285?spm_id_from=333.337.0.0" target="_blank" rel="noopener" class="btn">哔哩哔哩</a>
+            <!-- 抖音 -->
+            <a href="https://www.douyin.com/user/MS4wLjABAAAAuhyDxda_ju86Q3Oq6iG4NtEqoA0Jlhn-wMv0SEOUsLg?from_tab_name=main" target="_blank" rel="noopener" class="btn">抖音</a>
+            <!-- DLRS 同人网 -->
+            <a href="chinadlrs.com/pages/space?uid=47190" target="_blank" rel="noopener" class="btn">DLRS 同人群</a>
+        </div>
+        <div class="hint-text">
+            <i>关注</i> 点击直达作者B站/抖音/DLRS个人主页
+        </div>
+    </div>
+
+    <!-- 卡片3：下载区域（Windows & 安卓 + 不支持iOS等说明） -->
+    <div class="card">
+        <h2 class="card-title">下载游戏</h2>
+        <div class="button-grid half">
+            <!-- Windows 下载：百度网盘 -->
+            <a href="https://pan.baidu.com/s/13202xazcEXru3o1FeUAI7g?pwd=XKZY" target="_blank" rel="noopener" class="btn">Windows下载</a>
+            <!-- 安卓下载：按钮弹出提示 -->
+            <button class="btn android" onclick="alert('安卓下载资源暂未开放，作者正在努力移植中。\n\n目前仅支持Windows，iOS与HarmonyOS暂不支持。')">安卓下载</button>
+        </div>
+        <!-- 明确不支持iOS 和 harmonyOS -->
+        <div class="hint-text" style="margin-top: 1rem;">
+            ⚠️ <strong>暂不支持</strong> iOS 和 HarmonyOS ，安卓版本暂无资源。点击“安卓下载”可见提示。
+        </div>
+        <!-- 额外说明提取码 -->
+        <div class="hint-text" style="margin-top: 0.2rem;">
+             百度网盘 提取码: <code style="background:#eee; padding:2px 6px; border-radius:4px;">SKZY（不分大小写）</code> (Windows独占)
+        </div>
+    </div>
+
+    <!-- 卡片4：加入我们（官方QQ群） -->
+    <div class="card">
+        <h2 class="card-title">玩家社群</h2>
+        <div class="button-grid full">
+            <!-- QQ群链接 -->
+            <a href="https://qm.qq.com/q/zTW8maOW3g" target="_blank" rel="noopener" class="btn">加入官方QQ群</a>
+        </div>
+        <div class="hint-text">
+            群内交流饭制、获取最新进度
+        </div>
+    </div>
+
+    <!-- 卡片5：其他内容（跳转跳舞的线同人论坛网站） -->
+    <div class="card">
+        <h2 class="card-title">其他内容</h2>
+        <div class="button-grid full">
+            <!-- DLRS论坛 -->
+            <a href="https://chinadlrs.com" target="_blank" rel="noopener" class="btn">跳舞的线同人论坛</a>
+        </div>
+        <div class="hint-text">
+        </div>
+    </div>
+
+    <!-- 额外小板块：再次强调作者信息及致谢 -->
+    <div class="card" style="background: #fbfbfc;">
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: space-between;">
+            <span style="color: #667788;">特别感谢：所有参与测试的线友</span>
+            <span style="color: #99aabb; font-size:0.9rem;">v1.0.0 《烧烤之夜》跳舞的线饭制</span>
+        </div>
+    </div>
+
+    <!-- 底部留白 -->
+    <div class="footer-note">
+        跳舞的线饭制《烧烤之夜》官方网站
+    </div>
+</div>
+
+<script>
+    (function() {
+        // 原安卓按钮的空监听（保留，避免干扰）
+        const androidBtn = document.querySelector('.btn.android');
+        if (androidBtn) {
+            androidBtn.addEventListener('click', function(e) {
+                // 内联alert已处理，此处无需操作
+            });
+        }
+
+        // ---------- 进场动画：向下滑动时板块向上渐显并移动 ----------
+        function initScrollAnimation() {
+            var cards = document.querySelectorAll('.card');
+            if (!window.IntersectionObserver) {
+                // 降级：不支持IntersectionObserver时直接显示所有卡片
+                cards.forEach(function(card) {
+                    card.classList.add('show');
+                });
+                return;
+            }
+
+            var observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('show');
+                        // 卡片显示后不再观察，避免重复触发
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0,               // 只要任意像素进入视口/边距区域即触发
+                rootMargin: '30px 0px 30px 0px'  // 上下各提前30px触发，实现“即将出现时开始动画”
+            });
+
+            cards.forEach(function(card) {
+                observer.observe(card);
+            });
+        }
+
+        // 执行动画初始化
+        initScrollAnimation();
+    })();
+</script>
+</body>
+</html>
